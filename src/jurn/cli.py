@@ -5,7 +5,7 @@ import src.jurn.utils as u
 
 # jurn log -m 'wrote some docs' -t work#jurn
 # jurn log -m 'emailed customers' -t work#customers#social
-# jurn log -m 'helped teach ideas' -t work#education -t work#social
+# jurn log -m 'helped teach ideas' -t work#education
 # jurn print -d week
 # jurn print -d month
 # jurn print -d 2022-05-03 -d 2022-05-10
@@ -18,6 +18,7 @@ def cli(early_end,db_path,db_filename):
     global DB_CONNECTION 
     DB_CONNECTION = u.init_db(db_path,db_filename)
 
+    # determine if the prompt should be skipped based on the --early-end parameter and the last entry's timestamp.
     last_entry_timestamp=u.last_entry_timestamp(DB_CONNECTION)
 
     if early_end==None:
@@ -28,9 +29,6 @@ def cli(early_end,db_path,db_filename):
             pass
         else:
             exit()
-    
-
-    
 
 @cli.command()
 @click.option("--message", "-m", prompt=True, help="Message to save to the journal.")
@@ -65,7 +63,6 @@ def print(duration,date_start,date_end):
         else:
             date_end = date.today()
             click.echo(f'using default date_end today {date_end}')
-
 
 if __name__ == '__main__':
     cli()
