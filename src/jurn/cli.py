@@ -3,13 +3,6 @@ import click
 from datetime import date, datetime, timedelta
 import src.jurn.utils as u
 
-# jurn log -m 'wrote some docs' -t work#jurn
-# jurn log -m 'emailed customers' -t work#customers#social
-# jurn log -m 'helped teach ideas' -t work#education
-# jurn print -d week
-# jurn print -d month
-# jurn print -d 2022-05-03 -d 2022-05-10
-
 @click.group()
 @click.option("--early-end", "-ee", type=int, help="Stop jurn from executing if this amount of time has not passed since the last journal entry. Useful to supress jurn prompting too frequently if adding to a .bashrc file or schedule.")
 @click.option("--db-path", "-dp", help="The folder path for jurn's sqlite3 database. Defaults to ~/.jurn/ .", default="~/.jurn/")
