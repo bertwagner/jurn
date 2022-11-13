@@ -37,25 +37,10 @@ def log(message,tag):
 @click.option('--date-start', "-ds", type=click.DateTime(formats=["%Y-%m-%d"]), help="Inclusive start date range.")
 @click.option('--date-end', "-de", type=click.DateTime(formats=["%Y-%m-%d"]), help="Inclusive end date range.")
 def print(duration,date_start,date_end):
-    """Outputs journal entries to the terminal."""
+    """Outputs journal entries to the terminal for a specified date range (defaults to today)."""
     
-    if date_start==None and date_end:
-        click.echo("Must specify --date_start if providing --date_end")
-    elif (duration and (date_start or date_end)):
-        click.echo("Must specify either --duration or --date_start and --date_end")
-    elif (duration==None and date_start==None and date_end==None):
-        duration="day"
-        click.echo(f'using default duration {duration}')
-    elif (duration):
-        click.echo(f'using duration {duration}')
-    elif (date_start):
-        click.echo(f'using date_start {date_start}')
-
-        if (date_end):
-            click.echo(f'using date_end {date_end}')
-        else:
-            date_end = date.today()
-            click.echo(f'using default date_end today {date_end}')
+    (date_start,date_end)=u.calculate_date_range(duration,date_start,date_end)
+    
 
 if __name__ == '__main__':
     cli()

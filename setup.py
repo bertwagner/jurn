@@ -6,6 +6,7 @@ setup(
     py_modules=['jurn'],
     install_requires=[
         'Click',
+        'python-dateutil'
     ],
     entry_points={
         'console_scripts': [

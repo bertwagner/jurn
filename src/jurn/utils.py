@@ -1,6 +1,8 @@
 import sqlite3
 import os
-import datetime
+from datetime import datetime, date
+from dateutil import relativedelta
+import click
 
 def init_db(db_path, db_filename):
     # sqlite3 doens't like the ~ alias so we have to expand it first
@@ -23,7 +25,7 @@ def last_entry_timestamp(con):
     
     dt_string = "0001-01-01 00:00:00" 
     format = "%Y-%m-%d %H:%M:%S"
-    default_entry_timestamp = datetime.datetime.strptime(dt_string, format)
+    default_entry_timestamp = datetime.strptime(dt_string, format)
     last_entry_timestamp = default_entry_timestamp
 
     with con:
@@ -34,5 +36,47 @@ def last_entry_timestamp(con):
         if last_entry_timestamp==None:
             last_entry_timestamp=default_entry_timestamp
     
-    return datetime.datetime.strptime(last_entry_timestamp, format)
+    return datetime.strptime(last_entry_timestamp, format)
+
+def calculate_date_range(duration,date_start,date_end):
+    if date_start==None and date_end:
+        click.echo("Must specify --date_start if providing --date_end")
+        exit()
+
+    elif (duration and (date_start or date_end)):
+        click.echo("Must specify either --duration or --date_start and --date_end")
+        exit()
+
+    elif (duration==None and date_start==None and date_end==None):
+        #click.echo(f'using default duration {duration}')
+        duration="day"
+        date_start=date.today()
+        date_end=datetime.now()
+        
+    elif (duration):
+        #click.echo(f'using duration {duration}')
+        date_end=datetime.now()
+
+        if duration=="day":
+            date_start=date.today()
+        elif duration=="week":
+            date_start=date.today()+relativedelta.relativedelta(weeks=-1)
+        elif duration=="month":
+            date_start=date.today()+relativedelta.relativedelta(months=-1)
+        elif duration=="year":
+            date_start=date.today()+relativedelta.relativedelta(years=-1)
+        else:
+            raise Exception("Invalid duration value passed.")
+
+    elif (date_start):
+        #click.echo(f'using date_start {date_start}')
+
+        if (date_end):
+            #click.echo(f'using date_end {date_end}')
+            pass
+        else:
+            date_end = datetime.now()
+            #click.echo(f'using default date_end today {date_end}')
+    
+    return (date_start,date_end)
 
