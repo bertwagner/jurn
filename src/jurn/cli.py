@@ -1,6 +1,7 @@
+from email.policy import default
 import click
 from datetime import date
-
+import src.jurn.utils as u
 
 # jurn log -m 'wrote some docs' -t work#jurn
 # jurn log -m 'emailed customers' -t work#customers#social
@@ -11,18 +12,27 @@ from datetime import date
 
 @click.group()
 @click.option("--early-end", "-ee", type=int, help="Stop jurn from executing if this amount of time has not passed since the last journal entry. Useful to supress jurn prompting too frequently if adding to a .bashrc file or schedule.")
-def cli(early_end):
-    last_entry=5
+@click.option("--db-path", "-dp", help="The folder path for jurn's sqlite3 database. Defaults to ~/.jurn/ .", default="~/.jurn/")
+@click.option("--db-filename", "-df", help="The filename for jurn's sqlite3 database. Defaults to jurn.db .", default="jurn.db")
+def cli(early_end,db_path,db_filename):
+    last_entry=5 # TODO: write this method
+    
     if early_end==None or last_entry < early_end:
         pass
     else:
         exit()
 
+    global DB_CONNECTION 
+    DB_CONNECTION = u.init_db(db_path,db_filename)
+
 @cli.command()
 @click.option("--message", "-m", prompt=True, help="Message to save to the journal.")
-def log(message):
+@click.option("--tag", "-t",  help="Tags to use for your journal entry. Hierarchies can be denoted with hashtags, eg. parent-cateogry#sub-category#child-category")
+def log(message,tag):
     """Adds a journal entry to the database."""
-    click.echo(f"MESSAGE={message}")
+
+    with DB_CONNECTION:
+        DB_CONNECTION.execute("INSERT INTO entry (entry,tag) VALUES(?,?)",(message,tag,))
 
 @cli.command()
 @click.option("--duration", "-d", type=click.Choice(['day','week','month','year'], case_sensitive=False), help="Inclusive time period to print journal entries for.")

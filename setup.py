@@ -9,7 +9,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'jurn = src.jurn.main:cli',
+            'jurn = src.jurn.cli:cli',
         ],
     },
 )
