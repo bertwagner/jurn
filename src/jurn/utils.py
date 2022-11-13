@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import datetime
 
 def init_db(db_path, db_filename):
     # sqlite3 doens't like the ~ alias so we have to expand it first
@@ -17,3 +18,21 @@ def init_db(db_path, db_filename):
     con.execute("CREATE TABLE IF NOT EXISTS entry (id INTEGER PRIMARY KEY, insert_date DEFAULT CURRENT_TIMESTAMP, entry TEXT, tag)")
 
     return con
+
+def last_entry_timestamp(con):
+    
+    dt_string = "0001-01-01 00:00:00" 
+    format = "%Y-%m-%d %H:%M:%S"
+    default_entry_timestamp = datetime.datetime.strptime(dt_string, format)
+    last_entry_timestamp = default_entry_timestamp
+
+    with con:
+        cur = con.cursor()
+        res = cur.execute("SELECT MAX(insert_date) FROM entry")
+        last_entry_timestamp = res.fetchone()[0]
+
+        if last_entry_timestamp==None:
+            last_entry_timestamp=default_entry_timestamp
+    
+    return datetime.datetime.strptime(last_entry_timestamp, format)
+

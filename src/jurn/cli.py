@@ -1,6 +1,6 @@
 from email.policy import default
 import click
-from datetime import date
+from datetime import date, datetime, timedelta
 import src.jurn.utils as u
 
 # jurn log -m 'wrote some docs' -t work#jurn
@@ -15,15 +15,22 @@ import src.jurn.utils as u
 @click.option("--db-path", "-dp", help="The folder path for jurn's sqlite3 database. Defaults to ~/.jurn/ .", default="~/.jurn/")
 @click.option("--db-filename", "-df", help="The filename for jurn's sqlite3 database. Defaults to jurn.db .", default="jurn.db")
 def cli(early_end,db_path,db_filename):
-    last_entry=5 # TODO: write this method
-    
-    if early_end==None or last_entry < early_end:
-        pass
-    else:
-        exit()
-
     global DB_CONNECTION 
     DB_CONNECTION = u.init_db(db_path,db_filename)
+
+    last_entry_timestamp=u.last_entry_timestamp(DB_CONNECTION)
+
+    if early_end==None:
+        pass
+    else:
+        delay_until_timestamp = last_entry_timestamp + timedelta(minutes=early_end)
+        if delay_until_timestamp < datetime.utcnow():
+            pass
+        else:
+            exit()
+    
+
+    
 
 @cli.command()
 @click.option("--message", "-m", prompt=True, help="Message to save to the journal.")
