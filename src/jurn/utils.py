@@ -36,7 +36,7 @@ def last_entry_timestamp(con):
         if last_entry_timestamp==None:
             last_entry_timestamp=default_entry_timestamp
     
-    return datetime.strptime(last_entry_timestamp, format)
+    return datetime.strptime(str(last_entry_timestamp), format)
 
 def calculate_date_range(duration,date_start,date_end):
     if date_start==None and date_end:
@@ -51,11 +51,11 @@ def calculate_date_range(duration,date_start,date_end):
         #click.echo(f'using default duration {duration}')
         duration="day"
         date_start=date.today()
-        date_end=datetime.now()
+        date_end=datetime.utcnow()
         
     elif (duration):
         #click.echo(f'using duration {duration}')
-        date_end=datetime.now()
+        date_end=datetime.utcnow()
 
         if duration=="day":
             date_start=date.today()
@@ -80,3 +80,12 @@ def calculate_date_range(duration,date_start,date_end):
     
     return (date_start,date_end)
 
+def retrieve_entries(date_start,date_end,con):
+    with con:
+        cur = con.cursor()
+        res = cur.execute("""SELECT insert_date,entry,tag 
+                            FROM entry 
+                            WHERE insert_date >= ?
+                            AND insert_date <= ?
+                            ORDER BY tag, insert_date""",(date_start,date_end))
+        return res.fetchall()

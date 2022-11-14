@@ -2,6 +2,7 @@ from email.policy import default
 import click
 from datetime import date, datetime, timedelta
 import src.jurn.utils as u
+import pprint
 
 @click.group()
 @click.option("--early-end", "-ee", type=int, help="Stop jurn from executing if this amount of time has not passed since the last journal entry. Useful to supress jurn prompting too frequently if adding to a .bashrc file or schedule.")
@@ -40,7 +41,9 @@ def print(duration,date_start,date_end):
     """Outputs journal entries to the terminal for a specified date range (defaults to today)."""
     
     (date_start,date_end)=u.calculate_date_range(duration,date_start,date_end)
-    
+    entries = u.retrieve_entries(date_start,date_end,DB_CONNECTION)
+    pp=pprint.PrettyPrinter(indent=4)
+    pp.pprint(entries)
 
 if __name__ == '__main__':
     cli()
