@@ -26,7 +26,7 @@ def cli(early_end,db_path,db_filename):
 
 @cli.command()
 @click.option("--message", "-m", prompt=True, help="Message to save to the journal.")
-@click.option("--tag", "-t",  help="Tags to use for your journal entry. Hierarchies can be denoted with hashtags, eg. parent-cateogry#sub-category#child-category")
+@click.option("--tag", "-t", prompt=True,  help="Tags to use for your journal entry. Hierarchies can be denoted with hashtags, eg. parent-cateogry#sub-category#child-category")
 def log(message,tag):
     """Adds a journal entry to the database."""
 
