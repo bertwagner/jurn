@@ -25,7 +25,7 @@ def cli(early_end,db_path,db_filename):
             exit()
 
 @cli.command()
-@click.option("--message", "-m", prompt=True, help="Message to save to the journal.")
+@click.option("--message", "-m", prompt=True, is_flag=False, flag_value="", help="Message to save to the journal.")
 @click.option("--tag", "-t", prompt=True,  help="Tags to use for your journal entry. Hierarchies can be denoted with hashtags, eg. parent-cateogry#sub-category#child-category")
 def log(message,tag):
     """Adds a journal entry to the database."""
@@ -42,9 +42,17 @@ def print(duration,date_start,date_end):
     
     (date_start,date_end)=u.calculate_date_range(duration,date_start,date_end)
     entries = u.retrieve_entries(date_start,date_end,DB_CONNECTION)
-    pp=pprint.PrettyPrinter(indent=4)
-    pp.pprint(entries)
+    
+    previous_tag = ''
+    parent_tag = ''
+    current_level = 0
+    for entry in entries:
+        current_tag = entry['tag']
+        split_tags = current_tag.split('#')
 
-if __name__ == '__main__':
-    cli()
+        if current_tag != previous_tag:
+            click.echo('- '+str(entry['tag']))
+            previous_tag = current_tag
+        
+        click.echo('    - ' + str(entry['entry']))
 
