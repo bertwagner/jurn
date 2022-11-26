@@ -88,4 +88,9 @@ def retrieve_entries(date_start,date_end,con):
                             WHERE insert_date >= ?
                             AND insert_date <= ?
                             ORDER BY tag, insert_date""",(date_start,date_end))
-        return res.fetchall()
+
+        # add column names as keys instead of index numbers
+        column_names  = cur.description
+        result = [{column_names[index][0]: column for index, column in enumerate(value)} for value in cur.fetchall()]
+
+        return result

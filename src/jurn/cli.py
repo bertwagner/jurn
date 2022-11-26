@@ -43,16 +43,21 @@ def print(duration,date_start,date_end):
     (date_start,date_end)=u.calculate_date_range(duration,date_start,date_end)
     entries = u.retrieve_entries(date_start,date_end,DB_CONNECTION)
     
-    previous_tag = ''
-    parent_tag = ''
-    current_level = 0
+    previous_tags = ['']
+    
     for entry in entries:
-        current_tag = entry['tag']
-        split_tags = current_tag.split('#')
+        current_level = 0
+        current_tags = entry['tag'].split('#')
 
-        if current_tag != previous_tag:
-            click.echo('- '+str(entry['tag']))
-            previous_tag = current_tag
+        for tag in current_tags:
+            spaces = ' ' * (current_level * 2)
+            if (current_level < len(previous_tags) and tag != previous_tags[current_level]) or (current_level >= len(previous_tags)):
+                click.echo(spaces+'- '+tag)
+            
         
-        click.echo('    - ' + str(entry['entry']))
+            current_level+=1
 
+        spaces = ' ' * (current_level * 2)
+        click.echo(spaces + '- ' + str(entry['entry']))
+
+        previous_tags = current_tags
