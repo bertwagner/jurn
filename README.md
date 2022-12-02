@@ -49,6 +49,3 @@ Result:
 ### More Commands
 
 Use `jurn --help` to view all available options.
-
-## TODO:
- - fix DB_CONNECTIONs all over the place
