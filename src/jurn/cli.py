@@ -57,20 +57,20 @@ def print(ctx,duration,date_start,date_end):
         click.echo(str(date_start)[:10] + ' to ' + str(date_end)[:10])
 
     for entry in entries:
-        current_level = 1
+        current_level = 0
         current_tags = entry['tag'].split('#')
 
         for tag in current_tags:
             spaces = ' ' * (current_level * 2)
             if (current_level < len(previous_tags) and tag != previous_tags[current_level]) or (current_level >= len(previous_tags)):
                 if tag != '':
-                    click.echo(spaces+'• '+tag)
+                    click.echo(spaces+'  • '+tag)
             
             if tag != '':
                 current_level+=1
 
         spaces = ' ' * (current_level * 2)
-        click.echo(spaces + '• ' + str(entry['entry']))
+        click.echo(spaces + '  • ' + str(entry['entry']))
 
         previous_tags = current_tags
 
