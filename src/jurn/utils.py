@@ -94,3 +94,20 @@ def retrieve_entries(date_start,date_end,con):
         result = [{column_names[index][0]: column for index, column in enumerate(value)} for value in cur.fetchall()]
 
         return result
+
+class DistinctTags(click.ParamType):
+    name = "distinct_tags"
+
+    def shell_complete(self, ctx, param, incomplete):
+        con = init_db("~/.jurn","jurn.db")
+        with con:
+            cur = con.cursor()
+            res = cur.execute("""SELECT DISTINCT tag 
+                                FROM entry
+                                WHERE tag like ? 
+                                ORDER BY tag""",(incomplete+'%',))
+            results =  list(cur.fetchall())
+
+        return [
+            click.shell_completion.CompletionItem(value[0]) for value in results
+        ]
