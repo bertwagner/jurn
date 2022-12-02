@@ -1,7 +1,7 @@
 from email.policy import default
 import click
 from datetime import date, datetime, timedelta
-import src.jurn.utils as u
+import jurn.utils as u
 import pprint
 
 @click.group()
