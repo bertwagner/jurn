@@ -29,8 +29,8 @@ def cli(ctx,early_end,db_path,db_filename):
 
 
 @cli.command()
-@click.option("--message", "-m", prompt=True, is_flag=False, flag_value="", help="Message to save to the journal.")
-@click.option("--tag", "-t", prompt="Tag:", default="", show_default=False, type=u.DistinctTags(), help="Tags to use for your journal entry. Hierarchies can be denoted with hashtags, eg. parent-cateogry#sub-category#child-category")
+@click.option("--message", "-m", prompt=True, prompt_required=True, required=True, is_flag=False, help="Message to save to the journal.")
+@click.option("--tag", "-t", prompt=True, prompt_required=False, default="", type=u.DistinctTags(), help="Tags to use for your journal entry. Hierarchies can be denoted with hashtags, eg. parent-cateogry#sub-category#child-category")
 @click.pass_context
 def log(ctx,message,tag):
     """Adds a journal entry to the database."""
@@ -63,7 +63,8 @@ def print(ctx,duration,date_start,date_end):
         for tag in current_tags:
             spaces = ' ' * (current_level * 2)
             if (current_level < len(previous_tags) and tag != previous_tags[current_level]) or (current_level >= len(previous_tags)):
-                click.echo(spaces+'• '+tag)
+                if tag != '':
+                    click.echo(spaces+'• '+tag)
             
             if tag != '':
                 current_level+=1

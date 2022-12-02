@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jurn"
-version = "1.0.1"
+version = "1.0.0"
 authors = [
   { name="Bert Wagner", email="bertwagner@bertwagner.com" },
 ]
@@ -16,6 +16,13 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "Click",
+    "python-dateutil",
+]
+
+[project.scripts]
+jurn = "jurn.cli:cli"
 
 [project.urls]
 "Homepage" = "https://github.com/bertwagner/jurn"

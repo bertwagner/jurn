@@ -46,6 +46,16 @@ Result:
     • Added storage to camera recording devices.
 ```
 
+### Database
+
+The jurn database is stored in the following location by default:
+
+`~/.jurn/jurn.db`
+
+You can override this with the `--db-path <folder path> --db-filename <filename>` options.
+
 ### More Commands
 
 Use `jurn --help` to view all available options.
+
+
