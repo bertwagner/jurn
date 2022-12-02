@@ -52,5 +52,3 @@ Use `jurn --help` to view all available options.
 
 ## TODO:
  - fix DB_CONNECTIONs all over the place
- - is there a bug with date.today() not working becuase it brings back local instead of utc?
- - add dates to the print output

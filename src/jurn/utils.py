@@ -50,7 +50,7 @@ def calculate_date_range(duration,date_start,date_end):
     elif (duration==None and date_start==None and date_end==None):
         #click.echo(f'using default duration {duration}')
         duration="day"
-        date_start=date.today()
+        date_start=datetime.utcnow().date()
         date_end=datetime.utcnow()
         
     elif (duration):
@@ -58,13 +58,13 @@ def calculate_date_range(duration,date_start,date_end):
         date_end=datetime.utcnow()
 
         if duration=="day":
-            date_start=date.today()
+            date_start=datetime.utcnow().date()
         elif duration=="week":
-            date_start=date.today()+relativedelta.relativedelta(weeks=-1)
+            date_start=datetime.utcnow().date()+relativedelta.relativedelta(weeks=-1)
         elif duration=="month":
-            date_start=date.today()+relativedelta.relativedelta(months=-1)
+            date_start=datetime.utcnow().date()+relativedelta.relativedelta(months=-1)
         elif duration=="year":
-            date_start=date.today()+relativedelta.relativedelta(years=-1)
+            date_start=datetime.utcnow().date()+relativedelta.relativedelta(years=-1)
         else:
             raise Exception("Invalid duration value passed.")
 
@@ -75,7 +75,7 @@ def calculate_date_range(duration,date_start,date_end):
             #click.echo(f'using date_end {date_end}')
             pass
         else:
-            date_end = datetime.now()
+            date_end = datetime.utcnow()
             #click.echo(f'using default date_end today {date_end}')
     
     return (date_start,date_end)
